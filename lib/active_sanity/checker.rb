@@ -52,7 +52,7 @@ module ActiveSanity
     def check_previously_invalid_records
       return unless InvalidRecord.table_exists?
 
-      InvalidRecord.find_each do |invalid_record|
+      InvalidRecord.unscoped.find_each do |invalid_record|
         begin
           invalid_record.destroy if invalid_record.record.valid?
         rescue
@@ -68,7 +68,7 @@ module ActiveSanity
     def check_all_records
       models.each do |model|
         begin
-          model.find_each do |record|
+          model.unscoped.find_each do |record|
             unless record.valid?
               invalid_record!(record)
             end
